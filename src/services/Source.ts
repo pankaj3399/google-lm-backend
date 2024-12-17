@@ -227,14 +227,43 @@ export const summarizeWorkspace = async ({
 }): Promise<string> => {
     try {
         const prompt = `
-            Please create a detailed report with visualization included in form of tables , charts, images from the following data :
-            Workspace Name: ${workspaceName}
-            Notes: ${notes.join("\n\n")}
-            Sources: ${sources.join("\n\n")} in ${generateReportText}.
-            Please provide in points, first for all the notes and then for all the sources.
-            And if any data is present please create table with it and highlight any important information.
-            Please give the answer in markdown format
-        `;
+Workspace Name: ${workspaceName}
+Notes: 
+${notes.join("\n\n")}
+
+Sources: 
+${sources.join("\n\n")}
+
+Context: ${generateReportText}
+
+Generate a detailed website performance report in JSON format with the following structure:
+
+1. **Summary**: A concise overview of the website's performance, key trends, and highlights.
+
+2. **Analysis**: A detailed breakdown of:
+    - **Traffic**: Include metrics like page views, unique visitors, and traffic sources. Suggest using a bar chart for visualization.
+    - **User Behavior**: Metrics such as bounce rate, session duration, and user flow. Suggest using a line chart for visualization.
+    - **Engagement**: Include data on click-through rates, conversion rates, and user interactions. Suggest using a pie chart for visualization.
+
+3. **Audit**: Identify issues and provide insights into:
+    - **Technical Aspects**: Evaluate issues such as load times and broken links.
+    - **SEO Performance**: Review factors like keywords, backlinks, and meta tags.
+    - **Accessibility**: Assess aspects such as alt text usage and keyboard navigation.
+
+4. **Suggestions**: Provide actionable recommendations for improving website performance, SEO, and user experience.
+
+5. **Visualizations**: Include a \visualizations array with the following format:
+    
+Each visualization should specify chartType (e.g., line_chart, bar_chart, pie_chart).
+Include data with:
+labels (categories or time intervals).
+datasets, where each dataset includes:
+A label for the metric it represents.
+An array of data points.
+Styling options like borderColor and backgroundColor.
+
+Ensure the JSON output adheres to this structure and is ready to integrate into an application.
+`;
 
         const response = await axios.post(
             "https://api.openai.com/v1/chat/completions",

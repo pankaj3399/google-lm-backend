@@ -246,7 +246,7 @@ export const createSource = async (req: Request, res: Response) => {
         }
         if (user.openAikey === "") {
             return res
-                .status(410)
+                .status(400)
                 .json({ message: "Please provide woking OpenAi key" });
         }
 
@@ -328,7 +328,7 @@ export const createConversation = async (req: Request, res: Response) => {
         return res.json({ message: "User not found" });
     }
     if (user.openAikey === "") {
-        return res.json({ message: "Please provide woking OpenAi key" });
+        return res.status(400).json({ message: "Please provide woking OpenAi key" });
     }
     if (context === "," || question === "")
         return res.status(404).json({ message: "Please provide some context" });
@@ -356,7 +356,7 @@ export const createConversationOfSuggestion = async (
             return res.json({ message: "User not found" });
         }
         if (user.openAikey === "") {
-            return res.json({ message: "Please provide woking OpenAi key" });
+            return res.status(400).json({ message: "Please provide woking OpenAi key" });
         }
         const resp = await suggetionChat(question, user.openAikey);
         res.status(200).json({ message: resp });
@@ -489,13 +489,13 @@ export const getAllAccounts = async (req: Request, res: Response) => {
             try {
                 const user = await User.findOne({ clerkId });
                 if (!user) {
-                    return res.json({ message: "User not found" });
+                    return res.status(400).json({ message: "User not found" });
                 }
                 user.googleAnalytics = "";
                 user.propertyId = "";
                 user.googleRefreshToken = "";
                 await user.save();
-                res.status(410).json({
+                res.status(400).json({
                     message: "Token expired, Link again Google Analytics..",
                 });
             } catch (updateError) {
@@ -571,7 +571,7 @@ export const getGaReport = async (req: Request, res: Response) => {
         }
 
         if (user.openAikey === "") {
-            return res.json({ message: "Please provide OpenAI key" });
+            return res.status(400).json({ message: "Please provide OpenAI key" });
         }
 
         oauth2Client.setCredentials({
@@ -698,7 +698,7 @@ export const getGaReportForWorkspace = async (req: Request, res: Response) => {
             });
 
         if (user.openAikey === "") {
-            return res.json({ message: "Please provide woking OpenAi key" });
+            return res.status(400).json({ message: "Please provide woking OpenAi key" });
         }
 
         oauth2Client.setCredentials({
@@ -798,7 +798,7 @@ export const generateReport = async (req: Request, res: Response) => {
             return res.json({ message: "User not found" });
         }
         if (user.openAikey === "") {
-            return res.json({ message: "Please provide woking OpenAi key" });
+            return res.status(400).json({ message: "Please provide woking OpenAi key" });
         }
 
         const filteredNotes = workspace.notes.filter((note: any) => {
